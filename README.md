@@ -1,15 +1,9 @@
 # server-braintree001
 
-##init
-npm init 
+completar (crear si no existe) el archivo .env que contiene la configuracion de braintree
 
-##package
-npm install express --save
-npm install body-parser --save
-npm install braintree --save
-npm install dotenv --save
-
-##run
+## run
+npm install
 node index.js 
 
 
