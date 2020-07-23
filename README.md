@@ -1,22 +1,27 @@
 # server-braintree001
 
-##init
-npm init 
+completar (crear si no existe) el archivo .env que contiene la configuracion de braintree
 
-##package
-npm install express --save
-npm install body-parser --save
-npm install braintree --save
-npm install dotenv --save
+### Iniciar
 
-##run
-node index.js 
+instalar paquetes
+<pre> npm install </pre>
+
+iniciar el servidor
+<pre> node index.js </pre>
 
 
-##pruebas
-get -> http://localhost:8000/initializeBraintree
-post -> http://localhost:8000/confirmBraintree
+### Pruebas
+
+llamada GET que inicia Braintree:
+<pre> http://localhost:8000/initializeBraintree </pre>
+
+llamada POST que envia el intento de pago hacia Braintree
+<pre> http://localhost:8000/confirmBraintree 
+
+Parametros de la llamada:
 {
   "payment_method_nonce": "fake-valid-nonce",
   "amount": "10.00"
 }
+</pre>
