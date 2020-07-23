@@ -1,8 +1,11 @@
 
 const express    = require("express");
 const bodyParser = require('body-parser');
-const app        = express();
+const cors       = require('cors')
 const braintree  = require('braintree');
+
+const app = express();
+app.use(cors())
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -49,7 +52,7 @@ app.post('/confirmBraintree', async (req, res) =>
     });
     let transactionResponse = await gateway.transaction.sale({
         amount: data.amount,
-        paymentMethodNonce: data.payment_method_nonce,
+        paymentMethodNonce: data.payment_method_nonce, // 'fake-valid-nonce'
         options: {
             submitForSettlement: true
           }
