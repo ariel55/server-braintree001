@@ -29,14 +29,46 @@ app.get('/', function(req, res) {
  res.send(respuesta);
 });
 
+const gateway = braintree.connect({
+    "environment": braintree.Environment[process.env.BRAINTREE_ENV],
+    "merchantId" : process.env.BRAINTREE_MERCHANT_ID,
+    "publicKey"  : process.env.BRAINTREE_PUBLIC_KEY,
+    "privateKey" : process.env.BRAINTREE_PRIVATE_KEY
+});
+
+// app.post('/customer-find', async (req, res) => 
+// {
+//     const data = req.body;
+
+//     let transactionResponse = await gateway.customer.find(data.customerId, function(err, customer) { 
+//         if (err)
+//             res.send({data: err});
+//         else
+//             res.send({data: customer});    
+//     });
+    
+// });
+
+// app.post('/create-customer', async (req, res) => 
+// {
+//     const data = req.body;
+
+//     // crear un customer asociado a un metodo de pago
+//     gateway.customer.create(
+//     {
+//         id: data.customer_id,
+//         firstName: data.firstName,
+//         lastName: data.lastName,
+//         paymentMethodNonce: data.payment_method_nonce
+//     }, 
+//     function (err, result) {
+//             res.send({data: result});
+//     });
+
+// });
+
 app.get('/initializeBraintree', async (req, res) => 
 {
-    const gateway = braintree.connect({
-        "environment": braintree.Environment[process.env.BRAINTREE_ENV],
-        "merchantId" : process.env.BRAINTREE_MERCHANT_ID,
-        "publicKey"  : process.env.BRAINTREE_PUBLIC_KEY,
-        "privateKey" : process.env.BRAINTREE_PRIVATE_KEY
-    });
     let token = (await gateway.clientToken.generate({})).clientToken;
     res.send({data: token});
 });
@@ -44,18 +76,15 @@ app.get('/initializeBraintree', async (req, res) =>
 app.post('/confirmBraintree', async (req, res) => 
 {
     const data = req.body;
-    const gateway = braintree.connect({
-        "environment": braintree.Environment[process.env.BRAINTREE_ENV],
-        "merchantId" : process.env.BRAINTREE_MERCHANT_ID,
-        "publicKey"  : process.env.BRAINTREE_PUBLIC_KEY,
-        "privateKey" : process.env.BRAINTREE_PRIVATE_KEY
-    });
-    let transactionResponse = await gateway.transaction.sale({
+
+    let transactionResponse = await gateway.transaction.sale(
+    {
         amount: data.amount,
-        paymentMethodNonce: data.payment_method_nonce, // 'fake-valid-nonce'
+        paymentMethodNonce: data.payment_method_nonce,
+        customerId: data.customer_id,
         options: {
             submitForSettlement: true
-          }
+        }
     });
     
     res.send({data: transactionResponse});
